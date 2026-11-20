@@ -31,7 +31,9 @@ const refreshAccessToken = (req, res) => {
     }
     return res.json({ token: generateToken(decoded.id) });
   } catch {
-    return res.status(401).json({ message: "Refresh token expired or invalid" });
+    return res
+      .status(401)
+      .json({ message: "Refresh token expired or invalid" });
   }
 };
 
@@ -205,7 +207,9 @@ const changePassword = async (req, res) => {
       user.password,
     );
     if (!currentPasswordMatches) {
-      return res.status(400).json({ message: "Current password is incorrect." });
+      return res
+        .status(400)
+        .json({ message: "Current password is incorrect." });
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
@@ -243,7 +247,7 @@ const forgetPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 60 * 60 * 1000;
     await user.save();
 
-    const resetUrl = `http://localhost:5173/reset-password/${token}`;
+    const resetUrl = `https://task-pro-fawn.vercel.app/reset-password/${token}`;
     const transporter = nodemailer.createTransport({
       service: process.env.EMAIL_SERVICE || "gmail",
       auth: {
